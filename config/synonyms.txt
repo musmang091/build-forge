@@ -1,0 +1,128 @@
+kapra, rumal, napkin, tissue
+khata, meetha, zest, flavor, tang
+anaras, tropical fruit, pineapple
+suraj, sip, drink, beverage, sunsip
+adrak, spice, ginger
+machli, machlee, machle, seafood, aquatic, fish
+seb, fruit, apple
+phal, mewa, berry, fruit
+aam, tropical fruit, mango
+murghi, poultry, hen, chicken
+nimbu, citrus, lime, lemon
+doodh, dodh, dudh, dairy, milk
+cream, malai, malai cream, malayi
+chawal,chaawa, grain, staple, rice
+tamatar, tomato
+pani, aqua, liquid, water
+cheeni, sweetener, glucose, sugar
+ras, sharbat, nectar, extract, juice
+lassan, herb, clove, garlic
+roti, naan, loaf, bun, bread
+narangi, santra, citrus, tangerine, orange
+kela, fruit, banana
+makai, maize, grain, corn
+makhan, spread, margarine, butter
+thanda, sardi, chilly, frosty, cold
+mirch, spice, seasoning, pepper
+nariyal, fruit, palm, coconut
+namak, sodium, salt
+shahed, nectar, sweetener, honey
+kaafi, qahwa, brew, espresso, coffee
+aloo, potato, aaloo, potato, aalo, potatoes
+pyaaz, onion
+angoor, vine fruit, berry, grape
+gandum, grain, cereal, wheat
+gosht, protein, flesh, meat
+gajar, vegetable, root, carrot
+surf, detergent
+keema, minced, meat, minced meat, qeema
+pampers, diapers, nappies,
+tea, chai, chai tea, patti, pati
+aata, atta, flour
+
+# Brand synonyms
+pepsi, pepsico, pepsi cola
+coca-cola, coke, coca cola, cocacola
+milkpak, milk pack, milk pack, milk packet, milk pak
+lemonmax, lemon max, lemon maxx
+
+# Common misspellings
+tomatos => tomatoes
+detergant => detergent
+shampo => shampoo
+chni, chini, cheni, chenni => cheeni
+saban, sabon, sabun => soap
+
+# Regional/Language variations
+chawal, chaawal, rice, چاول
+roti, bread, روٹی
+
+# Weight Units
+kg, kgs, kilo, kilos, kilogram, kilograms
+gm, gram, grams, g
+mg, milligram, milligrams
+lb, lbs, pound, pounds
+oz, ounce, ounces
+
+# Volume/Liquid Measurements
+ml, milliliter, milliliters, millilitre
+litre, litres, liter, liters
+gallon, gal, gallons
+250ml => 250 milliliter, 1/4 liter, quarter liter
+500ml => 500 milliliter, 1/2 liter, half liter, adha liter
+1l => 1 liter, 1000ml
+1.5l => 1.5 liter, 1500ml
+2l => 2 liter, 2000ml
+2.25l => 2.25 liter, 2250ml
+ltr => liter
+
+# Package Units
+pack, packet, pk, pkt
+box, boxes
+case, cases
+dozen, dz, dozens
+pair, pairs, pr
+pc, pcs, piece, pieces
+set, sets
+bundle, bundles
+roll, rolls
+sheet, sheets
+pack of 2 => 2 pack, 2pk, 2 pieces
+pack of 3 => 3 pack, 3pk, 3 pieces
+pack of 6 => 6 pack, 6pk, 6 pieces
+pack of 12 => 12 pack, 12pk, dozen
+
+# Size Units
+small, sm, s
+medium, med, m
+large, lg, l
+extra large, xl
+double extra large, xxl
+triple extra large, xxxl
+
+# Volume/Weight Combinations
+100g, 100 gram, 100gram, 100 grams
+250g, 250 gram, 250gram, 250 grams, 1 pow
+500g, 500 gram, 500gram, 500 grams, 1/2 kg, half kg, adha kilo
+1kg, 1 kilo, 1kilo, 1000g, 1000 grams
+2kg, 2 kilo, 2kilo, 2000g, 2000 grams
+5kg, 5 kilo, 5kilo, 5000g, 5000 grams
+
+# Package Sizes
+single pack, 1 pack, 1pc, single piece
+twin pack, 2 pack, double pack
+family pack, large pack, big pack
+mini pack, small pack
+jumbo pack, extra large pack, xl pack
+
+# Container Types
+bottle, bottles, btl
+jar, jars
+can, cans
+pouch, pouches
+tube, tubes
+tin, tins
+carton, cartons
+container, containers
+sachet, sachets
+bag, bags

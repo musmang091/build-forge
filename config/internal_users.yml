@@ -1,0 +1,16 @@
+_meta:
+  type: "internalusers"
+  config_version: 2
+
+admin:
+  hash: "admin"  # Replace with the hash generated above
+  reserved: true
+  backend_roles:
+    - "admin"
+  description: "Admin user"
+  
+kibanaserver:
+  hash: "kibanaserver"  # Replace with the hash generated above
+  reserved: true
+  backend_roles:
+    - "kibanaserver" 

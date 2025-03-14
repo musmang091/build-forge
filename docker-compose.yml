@@ -8,11 +8,27 @@ services:
       - POSTGRES_PASSWORD=password@1234
       - POSTGRES_DB=postgres
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
         - /Users/usmanghani/local-app-data/postgres/data:/var/lib/postgresql/data
 
-  mysql:
+  
+
+  mysql-master:
+    image: mysql:8.0.35
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=mysql
+      - MYSQL_USER=dev_user
+      - MYSQL_PASSWORD=dev_password
+    ports:
+      - "23306:3306"
+    volumes:
+      - ./mysql-master-data:/var/lib/mysql
+      - ./mysql-master.cnf:/etc/mysql/conf.d/mysql.cnf
+    command: --server-id=1
+
+  mysql-slave:
     image: mysql:latest
     environment:
       - MYSQL_ROOT_PASSWORD=root
@@ -20,9 +36,13 @@ services:
       - MYSQL_USER=dev_user
       - MYSQL_PASSWORD=dev_password
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
-      - /Users/usmanghani/local-app-data/mysql/data:/var/lib/mysql
+      - /Users/usmanghani/local-app-data/mysql/slave:/var/lib/mysql
+      - ./mysql-slave.cnf:/etc/mysql/conf.d/mysql.cnf
+    command: --server-id=2
+    depends_on:
+      - mysql-master
 
   minio:
     image: minio/minio:latest
@@ -40,7 +60,7 @@ services:
     
 
   mongo1:
-    image: mongo:7.0.12
+    image: mongo:5.0.0
     command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
     ports:
       - 27017:27017
@@ -54,35 +74,140 @@ services:
       # start_interval: 1s
       retries: 30
     volumes:
-      - "mongo1_data:/data/db"
-      - "mongo1_config:/data/configdb"
+      - "mongo1_data4:/data/db"
+      - "mongo1_config4:/data/configdb"
+    networks:
+      - my_network
 
   mongo2:
-    image: mongo:7.0.12
+    image: mongo:5.0.0
     command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27018"]
     ports:
       - 27018:27018
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - "mongo2_data:/data/db"
-      - "mongo2_config:/data/configdb"
-
+      - "mongo2_data5:/data/db"
+      - "mongo2_config5:/data/configdb"
+    networks:
+      - my_network
   mongo3:
-    image: mongo:7.0.12
+    image: mongo:5.0.0
     command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27019"]
     ports:
       - 27019:27019
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - "mongo3_data:/data/db"
-      - "mongo3_config:/data/configdb"
+      - "mongo3_data6:/data/db"
+      - "mongo3_config6:/data/configdb"
+    networks:
+      - my_network
+
+  jupyter:
+    # image: jupyter/datascience-notebook:latest
+    image: jupyter-latest
+    ports:
+      - 8888:8888
+      - 8501:8501
+    volumes:
+      - ./notebooks:/home/jovyan/work
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    command: start-notebook.sh --NotebookApp.token=''
+    networks:
+      - my_network
+
+  opensearch:
+    image: opensearchproject/opensearch:2.15.0
+    container_name: opensearch
+    environment:
+      - cluster.name=opensearch-cluster
+      - node.name=opensearch-node
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - DISABLE_SECURITY_PLUGIN=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      # - ./config/opensearch.yml:/usr/share/opensearch/config/opensearch.yml
+      - ./config/synonyms.txt:/usr/share/opensearch/config/synonyms.txt
+      - opensearch-data:/usr/share/opensearch/data
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+    networks:
+      - opensearch-net
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:2.15.0
+    container_name: opensearch-dashboards
+    ports:
+      - "5601:5601"
+    environment:
+      - OPENSEARCH_HOSTS=["http://opensearch:9200"]
+      - DISABLE_SECURITY_DASHBOARDS_PLUGIN=true  # Make sure security is enabled
+      # - OPENSEARCH_SECURITY_AUTH_TYPE=basic
+      # - OPENSEARCH_SECURITY_USERNAME=admin
+      # - OPENSEARCH_SECURITY_PASSWORD=admin  # Use your chosen password
+    networks:
+      - opensearch-net
+    depends_on:
+      - opensearch
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - /Users/usmanghani/local-app-data/redis/data:/data
+    command: redis-server --appendonly yes
+    environment:
+      - REDIS_PASSWORD=your_redis_password
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 30s
+      retries: 50
+
+  n8n:
+    image: n8n-trino
+    ports:
+      - "5678:5678"
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_DATABASE=postgres      # matches your postgres service's POSTGRES_DB
+      - DB_POSTGRESDB_HOST=postgres          # references the postgres service name
+      - DB_POSTGRESDB_PORT=5432             # internal docker port, not the mapped 5433
+      - DB_POSTGRESDB_USER=postgres         # matches your postgres service's POSTGRES_USER
+      - DB_POSTGRESDB_PASSWORD=password@1234 # matches your postgres service's POSTGRES_PASSWORD
+      - DB_POSTGRESDB_SCHEMA=public         # default schema
+      - NODE_FUNCTION_ALLOW_EXTERNAL=*
+      - NODE_FUNCTION_ALLOW_BUILTIN=*
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      - postgres
 
 volumes:
-  mongo1_data:
-  mongo2_data:
-  mongo3_data:
-  mongo1_config:
-  mongo2_config:
-  mongo3_config:
+  mongo1_data4:
+  mongo2_data5:
+  mongo3_data6:
+  mongo1_config4:
+  mongo2_config5:
+  mongo3_config6:
+  opensearch-data:
+    driver: local
+  n8n_data:
+
+networks:
+  my_network:
+    driver: bridge
+  opensearch-net:
+    driver: bridge
